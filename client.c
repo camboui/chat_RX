@@ -18,6 +18,7 @@ fd_set set,setbis;
  
 int main(int argc,char *argv[]) {
 
+int taille_msg;
 	int port=atoi(argv[2]);
  	struct hostent *hote;
   	struct	sockaddr_in serveur;
@@ -58,9 +59,8 @@ int main(int argc,char *argv[]) {
   
   	while(strcmp(cmd,"quit")!=0)
     {
-    	//Copie de la liste des sockets
 		bcopy ( (char*) &set, (char*) &setbis, sizeof(set)) ;
-
+		
 		// Ecoute sur l'entree standard et la socket
 		select(maxsock, &setbis, 0, 0, 0);
 
@@ -69,6 +69,13 @@ int main(int argc,char *argv[]) {
 		
 		  gets(cmd);
 		  write(sock,cmd,strlen(cmd));
+      	}
+      	if(FD_ISSET(sock, &setbis)){
+		
+		  /*//recoit un message serveur
+		  	taille_msg=read(sock,cmd,TAILLEMAXMSG);
+			cmd[taille_msg]='\0';
+			printf("%s",cmd);*/
       	}
     }
   

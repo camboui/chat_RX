@@ -20,9 +20,10 @@ fd_set set,setbis;
 
 int main(int argc,char *argv[]) {
 
+int socktemp;
 	char message[MAX_MESSAGES];
 	int message_length;
-  
+  int nb_clients=0;
     // Initialisation de la socket
     socketInit = socket (AF_INET,SOCK_STREAM ,IPPROTO_TCP );
     if(socketInit==-1)
@@ -52,7 +53,8 @@ int main(int argc,char *argv[]) {
 		return -1;
 	}
     
-    int lg_client = sizeof(client);
+    int lg_client;
+    FD_ZERO(&set); // initialisation de la liste
     int maxsock = getdtablesize(); 
 	FD_SET(socketInit,&set); // ajout du socket du serveur dans la liste
 		
@@ -66,28 +68,30 @@ int main(int argc,char *argv[]) {
 		//Socket du serveur pret a etre lu: connexion d'un nouveau client
 		if (FD_ISSET(socketInit, &setbis))
 		{
-		    socketClient[0] = accept(socketInit,(struct sockaddr *)&client, &lg_client);
-			if (socketClient[0] == -1)
+		    socktemp = accept(socketInit,(struct sockaddr *)&client, &lg_client);
+			if (socktemp == -1)
 			{
 					printf("Erreur lors de la connexion d'un client\n");
 					return -1;
 			}
 			else
-				FD_SET(socketClient[0] ,&set);
+			{
+				socketClient[nb_clients]=socktemp;
+				FD_SET(socketClient[nb_clients] ,&set);
+				nb_clients++;
+				printf("\nnouveau client avec la socket %i",socktemp);
+
+			}
 		}
-
-
-		if(FD_ISSET( socketClient[0], &setbis))
+		for(int i=0;i<nb_clients;i++)
 		{
-			message_length = read(socketClient[0],message, MAX_MESSAGES);
-			message[message_length]='\0';
-			puts(message);
+			if(FD_ISSET( socketClient[i], &setbis))
+			{
+				message_length = read(socketClient[i],message, MAX_MESSAGES);
+				message[message_length]='\0';
+				puts(message);
+			}
 		}
-
-
-
-    
-
  
     }
     close(socketClient[0]);
