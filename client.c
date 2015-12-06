@@ -19,6 +19,7 @@ fd_set set,setbis;
 int main(int argc,char *argv[]) {
 
 int taille_msg;
+
 	int port=atoi(argv[2]);
  	struct hostent *hote;
   	struct	sockaddr_in serveur;
@@ -50,6 +51,18 @@ int taille_msg;
 	  return -1;
 	}
 	
+	write(sock,argv[3],strlen(argv[3])); // On envoie le pseudo au serveur
+	
+	taille_msg=read(sock,cmd,TAILLEMAXMSG); // On récupère sa réponse sur le pseudo
+	cmd[taille_msg]='\0';
+	printf("\n%s",cmd);
+	if(strncmp(cmd,"#SERVEUR > Connexion établie\n",29)!=0)
+	{
+		printf("Fermeture du client \n\n");
+		close(sock);
+		return -1;
+	}
+
 	
 	FD_ZERO(&set); // initialisation de la liste
 	int maxsock = getdtablesize(); // plus grand numéro de descripteur a observer
@@ -66,20 +79,19 @@ int taille_msg;
 
 		// Cas ou l'utilisateur entre une commande
 		if(FD_ISSET(0, &setbis)){
-		
 		  gets(cmd);
 		  write(sock,cmd,strlen(cmd));
       	}
       	if(FD_ISSET(sock, &setbis)){
 		
-		  /*//recoit un message serveur
+		  //recoit un message serveur
 		  	taille_msg=read(sock,cmd,TAILLEMAXMSG);
 			cmd[taille_msg]='\0';
-			printf("%s",cmd);*/
+			printf("%s",cmd);
       	}
     }
   
 
-      return 0;
-    }
+    return 0;
+}
 
