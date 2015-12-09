@@ -174,7 +174,7 @@ void traiter_requete_client(int num_client,char *message)
 {
 	char reponse[MAX_MESSAGES]="";
 
-	if(strcmp(message,"quit")==0)
+	if(strcmp(message,"quit")==0 || strcmp(message,"")==0)
 	{
 		printf("Le client %s a quitté le serveur\n",les_clients[num_client].pseudo);
 		sprintf(reponse, "#SERVEUR > Le client %s s'est déconnecté.\n", les_clients[num_client].pseudo);

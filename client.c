@@ -70,7 +70,7 @@ int taille_msg;
 	FD_SET(sock, &set); // ajout de la socket
 	
   
-  	while(strcmp(cmd,"quit")!=0)
+  	while(strcmp(cmd,"quit")!=0 && strcmp(cmd,"")!=0)
     {
 		bcopy ( (char*) &set, (char*) &setbis, sizeof(set)) ;
 		
@@ -89,8 +89,15 @@ int taille_msg;
 			cmd[taille_msg]='\0';
 			printf("%s",cmd);
       	}
+      	
     }
   
+	if(strcmp(cmd,"")==0)
+	{
+  		printf("Le serveur s'est arrêté\n");
+  	}
+  	printf("Fermeture du client \n\n");
+  	close(sock);
 
     return 0;
 }
