@@ -80,6 +80,8 @@ int taille_msg;
 		// Cas ou l'utilisateur entre une commande
 		if(FD_ISSET(0, &setbis)){
 		  gets(cmd);
+		  if(strcmp(cmd,"")==0)
+		 	 {strcpy(cmd," ");} //Il faut différencier le message de fermeture serveur et le message vide qui est interdit
 		  write(sock,cmd,strlen(cmd));
       	}
       	if(FD_ISSET(sock, &setbis)){

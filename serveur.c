@@ -64,7 +64,6 @@ int main(int argc,char *argv[]) {
 		return -1;
 	}
 
-
 	// mise en ecoute du serveur
 	if (listen(socketInit, MAX_CLIENTS) == -1){
 		printf("ERREUR lors du listen côté serveur\n");
@@ -176,6 +175,7 @@ void traiter_requete_client(int num_client,char *message)
 
 	if(strcmp(message,"quit")==0 || strcmp(message,"")==0)
 	{
+
 		printf("Le client %s a quitté le serveur\n",les_clients[num_client].pseudo);
 		sprintf(reponse, "#SERVEUR > Le client %s s'est déconnecté.\n", les_clients[num_client].pseudo);
 		
